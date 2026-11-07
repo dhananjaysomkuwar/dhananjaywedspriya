@@ -41,37 +41,42 @@ section{padding-block:72px;text-align:center}
 .divider b{width:7px;height:7px;background:var(--rose);transform:rotate(45deg);display:block}
 
 /* ---------- envelope ---------- */
+/* Opening sequence (transform/opacity only): seal pops 0-.35s, flap opens .2-.9s, letter rises .75-1.6s, cover fades 1.45-2.25s */
 .env{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;
   background:radial-gradient(ellipse at 50% 35%,var(--forest-2),var(--forest) 70%);color:var(--ivory);
   padding:calc(24px + env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) max(24px,env(safe-area-inset-left,0px));
-  transition:opacity .9s ease .9s, visibility 0s linear 1.8s}
-.env.open{opacity:0;visibility:hidden}
-.env-top{text-align:center;display:flex;flex-direction:column;gap:6px}
+  will-change:opacity,transform;transition:opacity .8s cubic-bezier(.4,0,.2,1) 1.45s,transform .8s cubic-bezier(.4,0,.2,1) 1.45s,visibility 0s linear 2.3s}
+.env.open{opacity:0;transform:scale(1.06);visibility:hidden}
+.env-top{text-align:center;display:flex;flex-direction:column;gap:6px;transition:opacity .4s ease,transform .5s cubic-bezier(.4,0,.2,1)}
+.env.open .env-top{opacity:0;transform:translateY(-12px)}
 .env-top .eyebrow{color:var(--gold-hi)}
 .env-names{font-family:var(--script);font-size:54px;line-height:1.1;color:var(--ivory);margin:0}
-.envelope{position:relative;width:min(340px,82vw);aspect-ratio:3/2;perspective:1200px;transition:transform 1s cubic-bezier(.6,0,.3,1) .5s}
-.env.open .envelope{transform:translateY(-14vh) scale(.92)}
+.envelope{position:relative;width:min(340px,82vw);aspect-ratio:3/2;perspective:900px;transform:translateZ(0)}
 .envelope .body{position:absolute;inset:0;background:var(--paper);border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.4)}
 .envelope .pocket{position:absolute;inset:0;border-radius:6px;background:linear-gradient(to top right,#F1E6D6 50%,transparent 50.4%) left/50% 100% no-repeat,linear-gradient(to top left,#F1E6D6 50%,transparent 50.4%) right/50% 100% no-repeat;z-index:3}
-.envelope .flap{position:absolute;left:0;right:0;top:0;height:62%;transform-origin:top;z-index:4;transition:transform .8s cubic-bezier(.6,0,.3,1),z-index 0s .4s}
-.envelope .flap::before{content:"";position:absolute;inset:0;background:#EADCC6;clip-path:polygon(0 0,100% 0,50% 100%);filter:drop-shadow(0 3px 3px rgba(0,0,0,.12))}
+.envelope .flap{position:absolute;left:0;right:0;top:0;height:62%;transform-origin:50% 0;z-index:4;will-change:transform;backface-visibility:visible;
+  transition:transform .7s cubic-bezier(.45,.05,.25,1) .2s,z-index 0s linear .55s}
+.envelope .flap::before{content:"";position:absolute;inset:0;background:#EADCC6;clip-path:polygon(0 0,100% 0,50% 100%)}
 .env.open .flap{transform:rotateX(180deg);z-index:1}
 .envelope .letter{position:absolute;left:7%;right:7%;top:8%;bottom:8%;background:var(--ivory);border-radius:4px;z-index:2;display:flex;align-items:center;justify-content:center;
-  font-family:var(--script);font-size:34px;color:var(--rose);opacity:0;transition:transform .9s cubic-bezier(.3,.7,.3,1) .45s,opacity .3s ease .45s}
-.env.open .letter{transform:translateY(-55%);opacity:1}
+  font-family:var(--script);font-size:34px;color:var(--rose);opacity:0;will-change:transform;
+  transition:transform .85s cubic-bezier(.22,.9,.3,1) .75s,opacity .25s ease .7s}
+.env.open .letter{transform:translateY(-58%);opacity:1}
 .seal{position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);z-index:5;width:84px;height:84px;border-radius:50%;border:0;cursor:pointer;
   background:radial-gradient(circle at 35% 30%,#C97C90,var(--rose) 45%,#8E4559);color:#FFF4F6;box-shadow:0 6px 16px rgba(0,0,0,.35),inset 0 -4px 8px rgba(0,0,0,.25);
-  font-family:var(--script);font-size:30px;line-height:1;display:flex;align-items:center;justify-content:center;transition:transform .4s ease,opacity .3s ease}
+  font-family:var(--script);font-size:30px;line-height:1;display:flex;align-items:center;justify-content:center;transition:transform .35s cubic-bezier(.4,0,.2,1),opacity .3s ease}
 .seal::after{content:"";position:absolute;inset:7px;border-radius:50%;border:1.5px dashed rgba(255,240,244,.55)}
 .seal:hover{transform:translate(-50%,-50%) scale(1.06)}
 .seal:focus-visible{outline:3px solid var(--gold-hi);outline-offset:4px}
-.env.open .seal{opacity:0;transform:translate(-50%,-50%) scale(.6)}
-.env-hint{font-family:var(--label);font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-hi);margin:0;animation:breathe 2.2s ease-in-out infinite}
+.env.open .seal{opacity:0;transform:translate(-50%,-50%) scale(.4);pointer-events:none}
+.env-hint{font-family:var(--label);font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-hi);margin:0;animation:breathe 2.2s ease-in-out infinite;transition:opacity .3s ease}
+.env.open .env-hint{opacity:0;animation:none}
 @keyframes breathe{50%{opacity:.45}}
+body.locked{overflow:hidden}
 
 /* ---------- hero ---------- */
 .hero{position:relative;aspect-ratio:2/3;max-width:100%;overflow:hidden}
-.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.15) saturate(1.12) brightness(1.04);transform:scale(1.12);transition:transform 9s cubic-bezier(.2,.6,.2,1)}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.15) saturate(1.12) brightness(1.04);transform:scale(1.1);will-change:transform;transition:transform 7s cubic-bezier(.16,.8,.3,1) 1.5s}
 .is-open .hero img{transform:scale(1)}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,247,234,.92) 0%,rgba(255,247,234,.55) 34%,rgba(255,247,234,0) 55%),rgba(255,196,130,.12);pointer-events:none}
 .hero-text{position:absolute;left:0;right:0;top:9%;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center}
@@ -80,8 +85,8 @@ section{padding-block:72px;text-align:center}
 .hero .amp{font-family:var(--script);font-size:clamp(48px,13vw,64px);color:var(--rose);line-height:1;margin:10px 0 2px}
 .hero-frame{position:absolute;inset:16px;border:1px solid rgba(255,255,255,.85);z-index:2;pointer-events:none}
 .rise{opacity:1}
-.is-open .rise{animation:rise 1.2s cubic-bezier(.22,.61,.36,1) both;animation-delay:calc(1.6s + var(--d,0s))}
-@keyframes rise{from{opacity:0;transform:translateY(26px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+.is-open .rise{animation:rise 1s cubic-bezier(.22,.61,.36,1) both;animation-delay:calc(1.9s + var(--d,0s));will-change:transform,opacity}
+@keyframes rise{from{opacity:0;transform:translate3d(0,22px,0)}to{opacity:1;transform:none}}
 
 /* ---------- scratch ---------- */
 .scratch-box{position:relative;margin:32px auto 0;width:min(100%,360px);aspect-ratio:5/4;border-radius:20px;overflow:hidden;background:var(--paper);box-shadow:0 18px 40px rgba(60,40,20,.14),inset 0 0 0 1px rgba(197,154,74,.35);touch-action:none;user-select:none;-webkit-user-select:none}
@@ -120,22 +125,29 @@ section{padding-block:72px;text-align:center}
 
 /* ---------- moments ---------- */
 .moments{background:var(--blush)}
-.polas{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:36px}
-.pola{background:#fff;padding:10px 10px 38px;box-shadow:0 14px 30px rgba(60,40,20,.18);transition:transform .5s cubic-bezier(.3,.7,.3,1);border:0;cursor:pointer;font:inherit}
-.pola:nth-child(1){transform:rotate(-4deg)}
-.pola:nth-child(2){transform:rotate(3.5deg) translateY(22px)}
+.polas{display:flex;gap:18px;margin:30px calc(-1 * max(24px,env(safe-area-inset-left,0px))) 0;padding:16px max(24px,env(safe-area-inset-left,0px)) 44px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.polas::-webkit-scrollbar{display:none}
+.pola{flex:0 0 min(64%,260px);scroll-snap-align:center;background:#fff;padding:10px 10px 38px;box-shadow:0 14px 30px rgba(60,40,20,.18);transition:transform .5s cubic-bezier(.3,.7,.3,1);border:0;cursor:pointer;font:inherit}
+.pola:nth-child(odd){transform:rotate(-3deg)}
+.pola:nth-child(even){transform:rotate(3deg) translateY(16px)}
+.swipe-hint{font-family:var(--label);font-size:12px;letter-spacing:.25em;text-transform:uppercase;color:var(--ink-soft);margin:0}
 .pola:hover,.pola:focus-visible{transform:rotate(0) scale(1.04);z-index:2;outline:none}
 .pola img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover}
 .pola span{display:block;font-family:var(--script);font-size:24px;color:var(--ink-soft);margin-top:8px}
 .light{position:fixed;inset:0;z-index:60;background:rgba(20,24,16,.92);display:flex;align-items:center;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
 .light img{max-height:88vh;max-width:100%;border:8px solid #fff;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.light button{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:calc(14px + env(safe-area-inset-right,0px));width:48px;height:48px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:26px;cursor:pointer}
+.light button{position:absolute;width:48px;height:48px;border-radius:50%;border:0;background:rgba(255,255,255,.15);color:#fff;font-size:26px;line-height:1;cursor:pointer}
+.light button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#lightClose{top:calc(14px + env(safe-area-inset-top,0px));right:calc(14px + env(safe-area-inset-right,0px))}
+#lightPrev{left:calc(12px + env(safe-area-inset-left,0px));top:50%;transform:translateY(-50%)}
+#lightNext{right:calc(12px + env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%)}
+.light img{touch-action:pan-y;transition:opacity .25s ease}
 
 /* ---------- blessing ---------- */
 .bless p.inv{font-style:italic;font-size:24px;line-height:1.5;max-width:30ch;margin:18px auto 0}
 .parents{display:flex;flex-direction:column;gap:18px;margin-top:8px}
 .parents p{margin:0;font-size:19px;color:var(--ink-soft);line-height:1.45}
-.parents strong{display:block;font-family:var(--script);font-weight:400;font-size:40px;color:var(--ink);line-height:1.2}
+.parents strong{display:block;font-family:var(--script);font-weight:400;font-size:36px;color:var(--ink);line-height:1.25}
 footer{background:var(--forest);color:var(--ivory);text-align:center;padding-block:56px calc(56px + env(safe-area-inset-bottom,0px))}
 footer p{margin:0}
 footer .sig{font-family:var(--script);font-size:46px;line-height:1.1}
@@ -252,14 +264,16 @@ footer .d{font-family:var(--label);font-size:13px;letter-spacing:.4em;color:var(
       <button class="pola" type="button" data-src="photos/meadow.jpg" aria-label="View larger photo in the meadow"><img src="photos/meadow.jpg" alt="Dhananjay and Priya in the meadow"><span>hand in hand</span></button>
       <button class="pola" type="button" data-src="photos/beach.jpg" aria-label="View larger photo on the beach"><img src="photos/beach.jpg" alt="Dhananjay and Priya on the beach at sunset"><span>by the sea</span></button>
     </div>
+    <p class="swipe-hint">Swipe for more · tap to enlarge</p>
   </section>
 
   <section class="bless pad">
-    <p class="eyebrow">With the blessings of</p>
+    <p class="eyebrow">Our families</p>
+    <h2>Two homes, one celebration</h2>
     <div class="divider"><i></i><b></b><i></i></div>
     <div class="parents">
-      <p><strong>Dhananjay</strong>Son of Mrs. Maya &amp; Mr. Dilip Somkuwar<br>Katol, Nagpur</p>
-      <p><strong>Priya</strong>Daughter of Mrs. Jyoti &amp; Mr. Ashok Shrivastava<br>Ratlam (M.P.)</p>
+      <p><strong>The Somkuwar family</strong>Mrs. Maya &amp; Mr. Dilip Somkuwar<br>parents of Dhananjay · Katol, Nagpur</p>
+      <p><strong>The Shrivastava family</strong>Mrs. Jyoti &amp; Mr. Ashok Shrivastava<br>parents of Priya · Ratlam (M.P.)</p>
     </div>
     <p class="inv">The Somkuwar family warmly invites you to bless this celebration with your presence.</p>
   </section>
@@ -270,7 +284,7 @@ footer .d{font-family:var(--label);font-size:13px;letter-spacing:.4em;color:var(
   </footer>
 </div>
 
-<div class="light" id="light" hidden><button type="button" id="lightClose" aria-label="Close photo">×</button><img id="lightImg" alt=""></div>
+<div class="light" id="light" hidden role="dialog" aria-label="Photo viewer"><img id="lightImg" alt=""><button type="button" id="lightPrev" aria-label="Previous photo">‹</button><button type="button" id="lightNext" aria-label="Next photo">›</button><button type="button" id="lightClose" aria-label="Close photo">×</button></div>
 
 <script>
 (function(){
@@ -285,12 +299,12 @@ footer .d{font-family:var(--label);font-size:13px;letter-spacing:.4em;color:var(
     else { audio.pause(); setPlaying(false); }
   });
 
+  document.body.classList.add('locked');
   document.getElementById('seal').addEventListener('click', () => {
-    env.classList.add('open'); document.body.classList.add('is-open');
-    musicBtn.hidden = false;
+    requestAnimationFrame(() => { env.classList.add('open'); document.body.classList.add('is-open'); });
     audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
-    burst(60);
-    setTimeout(() => { env.setAttribute('aria-hidden','true'); }, 1900);
+    setTimeout(() => burst(55), 1500);
+    setTimeout(() => { env.setAttribute('aria-hidden','true'); document.body.classList.remove('locked'); musicBtn.hidden = false; }, 2300);
   });
 
   /* countdown */
@@ -384,11 +398,26 @@ footer .d{font-family:var(--label);font-size:13px;letter-spacing:.4em;color:var(
 
   /* photo lightbox */
   const light = document.getElementById('light'), limg = document.getElementById('lightImg');
-  document.querySelectorAll('.pola').forEach(b => b.addEventListener('click', () => { limg.src = b.dataset.src; limg.alt = b.querySelector('img').alt; light.hidden = false; document.getElementById('lightClose').focus(); }));
+  const polas = [...document.querySelectorAll('.pola')]; let cur = 0;
+  function show(i){ cur = (i + polas.length) % polas.length; const b = polas[cur]; limg.src = b.dataset.src; limg.alt = b.querySelector('img').alt; }
+  polas.forEach((b, i) => b.addEventListener('click', () => { show(i); light.hidden = false; document.getElementById('lightClose').focus(); }));
+  const many = polas.length > 1;
+  document.getElementById('lightPrev').hidden = !many; document.getElementById('lightNext').hidden = !many;
+  if (polas.length < 3) document.querySelector('.swipe-hint').textContent = 'Tap a photo to enlarge';
   function closeLight(){ light.hidden = true; }
   document.getElementById('lightClose').addEventListener('click', closeLight);
+  document.getElementById('lightPrev').addEventListener('click', e => { e.stopPropagation(); show(cur - 1); });
+  document.getElementById('lightNext').addEventListener('click', e => { e.stopPropagation(); show(cur + 1); });
   light.addEventListener('click', e => { if (e.target === light) closeLight(); });
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !light.hidden) closeLight(); });
+  let sx = null;
+  limg.addEventListener('pointerdown', e => { sx = e.clientX; });
+  limg.addEventListener('pointerup', e => { if (sx === null) return; const dx = e.clientX - sx; sx = null; if (Math.abs(dx) > 40 && many) show(cur + (dx < 0 ? 1 : -1)); });
+  addEventListener('keydown', e => {
+    if (light.hidden) return;
+    if (e.key === 'Escape') closeLight();
+    if (e.key === 'ArrowRight' && many) show(cur + 1);
+    if (e.key === 'ArrowLeft' && many) show(cur - 1);
+  });
 })();
 </script>
 
