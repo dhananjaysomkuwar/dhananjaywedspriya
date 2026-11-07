@@ -50,6 +50,7 @@ section{padding-block:72px;text-align:center}
 .env-top{text-align:center;display:flex;flex-direction:column;gap:6px;transition:opacity .4s ease,transform .5s cubic-bezier(.4,0,.2,1)}
 .env.open .env-top{opacity:0;transform:translateY(-12px)}
 .env-top .eyebrow{color:var(--gold-hi)}
+.env-guest{font-family:var(--display);font-style:italic;font-size:26px;line-height:1.2;color:var(--ivory);margin:0 0 6px;text-wrap:balance}
 .env-names{font-family:var(--script);font-size:54px;line-height:1.1;color:var(--ivory);margin:0}
 .envelope{position:relative;width:min(340px,82vw);aspect-ratio:3/2;perspective:900px;transform:translateZ(0)}
 .envelope .body{position:absolute;inset:0;background:var(--paper);border-radius:6px;box-shadow:0 30px 60px rgba(0,0,0,.4)}
@@ -171,6 +172,7 @@ footer .d{font-family:var(--label);font-size:13px;letter-spacing:.4em;color:var(
 
 <div class="env" id="env">
   <div class="env-top">
+    <p class="env-guest" id="guest" hidden></p>
     <p class="eyebrow">You're invited</p>
     <p class="env-names">Dhananjay &amp; Priya</p>
   </div>
@@ -275,7 +277,7 @@ footer .d{font-family:var(--label);font-size:13px;letter-spacing:.4em;color:var(
       <p><strong>The Somkuwar family</strong>Mrs. Maya &amp; Mr. Dilip Somkuwar<br>parents of Dhananjay · Katol, Nagpur</p>
       <p><strong>The Shrivastava family</strong>Mrs. Jyoti &amp; Mr. Ashok Shrivastava<br>parents of Priya · Ratlam (M.P.)</p>
     </div>
-    <p class="inv">The Somkuwar family warmly invites you to bless this celebration with your presence.</p>
+    <p class="inv"><span id="invGuest" hidden></span>We warmly invite you to bless our wedding with your presence.</p>
   </section>
 
   <footer class="pad">
@@ -306,6 +308,17 @@ footer .d{font-family:var(--label);font-size:13px;letter-spacing:.4em;color:var(
     setTimeout(() => burst(55), 1500);
     setTimeout(() => { env.setAttribute('aria-hidden','true'); document.body.classList.remove('locked'); musicBtn.hidden = false; }, 2300);
   });
+
+  /* personal greeting from the link, e.g. …/#Sharma-Family → "Dear Sharma Family" */
+  try {
+    const raw = decodeURIComponent((location.hash || '').slice(1));
+    const name = raw.replace(/[-_+]+/g, ' ').replace(/[^\p{L}\p{N} .&']/gu, '').replace(/\s+/g, ' ').trim().slice(0, 48);
+    if (name) {
+      const g = document.getElementById('guest'); g.textContent = 'Dear ' + name + ','; g.hidden = false;
+      const ig = document.getElementById('invGuest'); ig.textContent = 'Dear ' + name + ', '; ig.hidden = false;
+      document.title = 'Dhananjay & Priya · for ' + name;
+    }
+  } catch (e) {}
 
   /* countdown */
   const target = new Date('2026-11-25T19:00:00+05:30').getTime();
